@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text} from 'react-native';
 
 import './config/ReactotronConfig';
 
+import Routes from './routes';
+
 export default function App() {
-  return <Text>Olá mundo!!!</Text>;
+  return <Routes />;
 }

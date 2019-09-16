@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "react-native start",
+    "startserver": "react-native start --reset-cache",
+    "startdroid": "react-native run-android",
     "test": "jest"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "react": "16.8.6",
     "react-native": "0.60.5",
     "react-native-gesture-handler": "^1.4.1",

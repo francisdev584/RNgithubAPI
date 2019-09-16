@@ -3,6 +3,7 @@ import {Keyboard, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {throwError} from 'rxjs';
 import api from '../../services/api';
 
 import {
@@ -28,19 +29,26 @@ export default class Main extends Component {
   };
 
   async componentDidMount() {
-    const {users} = await AsyncStorage.getItem('users');
+    try {
+      const users = await AsyncStorage.getItem('users');
 
-    if (users) {
-      this.setState({users: JSON.parse(users)});
+      if (users) {
+        this.setState({users: JSON.parse(users)});
+      }
+      console.tron.log(this.state);
+    } catch (e) {
+      throwError();
+    } finally {
     }
   }
 
-  componentDidUpdate(_, prevState) {
+  async componentDidUpdate(_, prevState) {
     const {users} = this.state;
 
     if (prevState.users !== users) {
-      AsyncStorage.setItem('users', JSON.stringify(users));
+      await AsyncStorage.setItem('users', JSON.stringify(users));
     }
+    // console.tron.log(prevState.users);
   }
 
   handleAddUser = async () => {

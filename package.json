@@ -5,7 +5,8 @@
   "scripts": {
     "startserver": "react-native start --reset-cache",
     "startdroid": "react-native run-android",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "npx jetify"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
@@ -16,7 +17,7 @@
     "react-native-reanimated": "^1.2.0",
     "react-native-screens": "^2.0.0-alpha.3",
     "react-native-vector-icons": "^6.6.0",
-    "react-navigation": "^4.0.4",
+    "react-navigation": "^4.0.5",
     "react-navigation-stack": "^1.7.3",
     "reactotron-react-native": "^3.6.5",
     "styled-components": "^4.3.2"
@@ -36,6 +37,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "jest": "^24.1.0",
+    "jetifier": "^1.6.4",
     "metro-react-native-babel-preset": "0.54.1",
     "prettier": "^1.18.2",
     "react-test-renderer": "16.8.6"

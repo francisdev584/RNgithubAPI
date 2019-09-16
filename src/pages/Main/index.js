@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Keyboard, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {throwError} from 'rxjs';
 import api from '../../services/api';
 
 import {
@@ -21,6 +20,17 @@ import {
 } from './styles';
 
 export default class Main extends Component {
+  // eslint-disable-next-line react/static-property-placement
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }).isRequired,
+  };
+
+  static navigationOptions = {
+    title: 'Usuários',
+  };
+
   // eslint-disable-next-line react/state-in-constructor
   state = {
     newUser: '',
@@ -35,20 +45,21 @@ export default class Main extends Component {
       if (users) {
         this.setState({users: JSON.parse(users)});
       }
-      console.tron.log(this.state);
     } catch (e) {
-      throwError();
-    } finally {
+      console.tron.log(e);
     }
   }
 
   async componentDidUpdate(_, prevState) {
-    const {users} = this.state;
+    try {
+      const {users} = this.state;
 
-    if (prevState.users !== users) {
-      await AsyncStorage.setItem('users', JSON.stringify(users));
+      if (prevState.users !== users) {
+        await AsyncStorage.setItem('users', JSON.stringify(users));
+      }
+    } catch (e) {
+      console.tron.log(e);
     }
-    // console.tron.log(prevState.users);
   }
 
   handleAddUser = async () => {
@@ -70,6 +81,11 @@ export default class Main extends Component {
       loading: false,
     });
     Keyboard.dismiss();
+  };
+
+  handleNavivate = user => {
+    const {navigation} = this.props;
+    navigation.navigate('User', {user});
   };
 
   render() {
@@ -108,7 +124,7 @@ export default class Main extends Component {
               <Name>{item.name}</Name>
               <Bio>{item.bio}</Bio>
 
-              <ProfileButton onPress={() => {}}>
+              <ProfileButton onPress={() => this.handleNavivate(item)}>
                 <ProfileButtonText>Ver Perfil</ProfileButtonText>
               </ProfileButton>
             </User>
@@ -118,6 +134,3 @@ export default class Main extends Component {
     );
   }
 }
-Main.navigationOptions = {
-  title: 'Usuários',
-};

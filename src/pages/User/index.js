@@ -32,7 +32,9 @@ export default class User extends Component {
 
   // eslint-disable-next-line react/state-in-constructor
   state = {
+    user: '',
     stars: [],
+    nextPage: 2,
     loading: false,
   };
 
@@ -44,9 +46,22 @@ export default class User extends Component {
 
     this.setState({
       stars: response.data,
+      user: user.login,
       loading: false,
     });
   }
+
+  handleLoadMore = async () => {
+    const {user, nextPage, stars} = this.state;
+    this.setState({loading: true});
+    const response = await api.get(`users/${user}/starred?page=${nextPage}`);
+
+    this.setState({
+      stars: [...stars, ...response.data],
+      loading: false,
+      nextPage: nextPage + 1,
+    });
+  };
 
   render() {
     const {navigation} = this.props;
@@ -61,6 +76,10 @@ export default class User extends Component {
         </Header>
         <ActivityIndicator animating={loading} color="#aaa" />
         <Stars
+          // ListFooterComponent={this.renderFooter}
+          onEndReached={this.handleLoadMore} // Função que carrega mais itens
+          onEndReachedThreshold={0.2} // Carrega mais itens quando chegar em 20% do fim
+          // Restante das props
           data={stars}
           keyExtractor={star => String(star.id)}
           renderItem={({item}) => (

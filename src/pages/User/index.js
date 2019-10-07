@@ -55,13 +55,13 @@ export default class User extends Component {
 
   handleLoadMore = async () => {
     const {user, nextPage, stars} = this.state;
-    this.setState({refreshing: true});
+    this.setState({loading: true});
     const response = await api.get(`users/${user}/starred?page=${nextPage}`);
     console.tron.log(response);
-    if (response.data !== []) {
+    if (response.data.length !== 0) {
       this.setState({
         stars: [...stars, ...response.data],
-        refreshing: false,
+        loading: false,
         nextPage: nextPage + 1,
       });
     } else {
@@ -94,28 +94,27 @@ export default class User extends Component {
           <Name>{user.name}</Name>
           <Bio>{user.bio}</Bio>
         </Header>
+        <Stars
+          onRefresh={this.refreshList} // Função dispara quando o usuário arrasta a lista pra baixo
+          refreshing={refreshing} // Variável que armazena um estado true/false que representa se a lista está atualizando
+          onEndReached={this.handleLoadMore} // Função que carrega mais itens
+          onEndReachedThreshold={0.2} // Carrega mais itens quando chegar em 20% do fim
+          // Restante das props
+          data={stars}
+          keyExtractor={star => String(star.id)}
+          renderItem={({item}) => (
+            <Starred>
+              <OwnerAvatar source={{uri: item.owner.avatar_url}} />
+              <Info>
+                <Title>{item.name}</Title>
+                <Author>{item.owner.login}</Author>
+              </Info>
+            </Starred>
+          )}
+        />
         {loading ? (
           <ActivityIndicator animating={loading} color="#aaa" size="large" />
-        ) : (
-          <Stars
-            onRefresh={this.refreshList} // Função dispara quando o usuário arrasta a lista pra baixo
-            refreshing={refreshing} // Variável que armazena um estado true/false que representa se a lista está atualizando
-            onEndReached={this.handleLoadMore} // Função que carrega mais itens
-            onEndReachedThreshold={0.2} // Carrega mais itens quando chegar em 20% do fim
-            // Restante das props
-            data={stars}
-            keyExtractor={star => String(star.id)}
-            renderItem={({item}) => (
-              <Starred>
-                <OwnerAvatar source={{uri: item.owner.avatar_url}} />
-                <Info>
-                  <Title>{item.name}</Title>
-                  <Author>{item.owner.login}</Author>
-                </Info>
-              </Starred>
-            )}
-          />
-        )}
+        ) : null}
       </Container>
     );
   }

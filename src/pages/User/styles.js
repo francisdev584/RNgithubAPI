@@ -74,8 +74,3 @@ export const Author = styled.Text`
   color: #666;
   margin-top: 2px;
 `;
-
-export const FooterActivityIndicator = styled.View`
-  margin-top: 5px;
-  flex: 1;
-`;

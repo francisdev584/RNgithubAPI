@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
 import api from '../../services/api';
 
@@ -16,7 +16,6 @@ import {
   Info,
   Title,
   Author,
-  FooterActivityIndicator,
 } from './styles';
 
 export default class User extends Component {
@@ -28,6 +27,7 @@ export default class User extends Component {
   static propTypes = {
     navigation: PropTypes.shape({
       getParam: PropTypes.func,
+      navigate: PropTypes.func,
     }).isRequired,
   };
 
@@ -57,7 +57,7 @@ export default class User extends Component {
     const {user, nextPage, stars} = this.state;
     this.setState({loading: true});
     const response = await api.get(`users/${user}/starred?page=${nextPage}`);
-    console.tron.log(response);
+    // console.tron.log(response);
     if (response.data.length !== 0) {
       this.setState({
         stars: [...stars, ...response.data],
@@ -83,6 +83,11 @@ export default class User extends Component {
     });
   };
 
+  handleNavigate = repository => {
+    const {navigation} = this.props;
+    navigation.navigate('Repository', {repository});
+  };
+
   render() {
     const {navigation} = this.props;
     const {stars, loading, refreshing} = this.state;
@@ -106,8 +111,12 @@ export default class User extends Component {
             <Starred>
               <OwnerAvatar source={{uri: item.owner.avatar_url}} />
               <Info>
-                <Title>{item.name}</Title>
-                <Author>{item.owner.login}</Author>
+                <Title onPress={() => this.handleNavigate(item)}>
+                  {item.name}
+                </Title>
+                <Author onPress={() => this.handleNavigate(item)}>
+                  {item.owner.login}
+                </Author>
               </Info>
             </Starred>
           )}

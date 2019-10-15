@@ -39,26 +39,18 @@ export default class Main extends Component {
   };
 
   async componentDidMount() {
-    try {
-      const users = await AsyncStorage.getItem('users');
+    const users = await AsyncStorage.getItem('users');
 
-      if (users) {
-        this.setState({users: JSON.parse(users)});
-      }
-    } catch (e) {
-      console.tron.log(e);
+    if (users) {
+      this.setState({users: JSON.parse(users)});
     }
   }
 
   async componentDidUpdate(_, prevState) {
-    try {
-      const {users} = this.state;
+    const {users} = this.state;
 
-      if (prevState.users !== users) {
-        await AsyncStorage.setItem('users', JSON.stringify(users));
-      }
-    } catch (e) {
-      console.tron.log(e);
+    if (prevState.users !== users) {
+      await AsyncStorage.setItem('users', JSON.stringify(users));
     }
   }
 
@@ -102,16 +94,11 @@ export default class Main extends Component {
             returnKeyType="send"
             onSubmitEditing={this.handleAddUser}
           />
-          <SubmitButton loading={loading}>
+          <SubmitButton loading={loading} onPress={this.handleAddUser}>
             {loading ? (
               <ActivityIndicator color="#FFF" />
             ) : (
-              <Icon
-                name="add"
-                size={20}
-                color="#FFF"
-                onPress={this.handleAddUser}
-              />
+              <Icon name="add" size={20} color="#FFF" />
             )}
           </SubmitButton>
         </Form>

@@ -46,5 +46,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "resolutions": {
+    "logkitty":"^0.7.1",
+    "yargs-parser":"^13.1.2",
+    "node-fetch":"^2.6.1"
   }
 }
